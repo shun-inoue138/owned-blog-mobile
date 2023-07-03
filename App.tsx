@@ -1,20 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NativeBaseProvider, extendTheme } from "native-base";
+import PostsScreen from "./screens/PostsScreen";
+import SignInScreen from "./screens/SignInScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+
+const Stack = createNativeStackNavigator();
+const theme = extendTheme({
+  colors: {
+    main: "#303030",
+    base: "#DCDCDC",
+    accent: "#DC143C",
+    main_text: "#303030",
+    sub_text: "#708090",
+    base_text: "#DCDCDC",
+    success: "#0000FF",
+    info: "#008000",
+    alert: "#FF0000",
+  },
+});
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NativeBaseProvider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Posts">
+          <Stack.Screen name="Posts" component={PostsScreen} />
+          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
