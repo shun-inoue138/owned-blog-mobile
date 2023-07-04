@@ -1,13 +1,11 @@
 import { Box, Center, Text } from "native-base";
 import React from "react";
+import Header from "../components/Header";
 
 const PostsScreen = () => {
   return (
-    <Box flex={1} bgColor="base">
-      <Box bgColor="amber.300">
-        <Text>Posts</Text>
-      </Box>
-      <Text>Posts</Text>
+    <Box flex={1} bgColor="base" alignItems={"stretch"}>
+      <Header />
     </Box>
   );
 };
