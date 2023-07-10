@@ -1,14 +1,24 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import { COMPANY_URL } from "@env";
+import { HOME_URL } from "@env";
 
-const localUrl = "http://localhost:3005/";
+//会社or自宅ののIPアドレス
+const localUrl = HOME_URL;
 
-const getToken = async () => {
-  const token = await AsyncStorage.getItem("token");
+//デバッグ用にexportしている
+export const getToken = async () => {
+  let token: string | null;
+  try {
+    token = await SecureStore.getItemAsync("token");
+  } catch (error) {
+    //tokenが存在しない時同様にエラー発生時もnullを格納する
+    token = null;
+  }
   if (token) {
     return token;
   } else {
-    return "";
+    return null;
   }
 };
 
@@ -26,7 +36,10 @@ export const apiWithFile = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  config.headers["Authorization"] = `bearer ${await getToken()}`;
+  const token = await getToken();
+  console.log(token);
+
+  token && (config.headers["Authorization"] = `bearer ${token}`);
   config.headers["Content-Type"] = "application/json";
   return config;
 });
@@ -41,7 +54,9 @@ api.interceptors.response.use(
 );
 
 apiWithFile.interceptors.request.use(async (config) => {
-  config.headers["Authorization"] = `bearer ${await getToken()}`;
+  const token = await getToken();
+  console.log(token);
+  token && (config.headers["Authorization"] = `bearer ${token}`);
   config.headers["Content-Type"] = "multipart/form-data";
   return config;
 });
